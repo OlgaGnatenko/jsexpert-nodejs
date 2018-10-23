@@ -1,27 +1,27 @@
 const http = require('http');
 const fs = require('fs');
-const zlib = require('zlib'); 
+const zlib = require('zlib');
+const meter = require('stream-meter');
+const m = meter();
 
-function errorCb (err, data) {
-    console.log(err ? "Error: " + err : data);
-}
+const uploadFolder = 'received-files';
 
-var server = http.createServer(function(req, res) {
+var server = http.createServer(function (req, res) {
     const filename = req.headers.filename;
-    console.log('file request to server: ' + filename);
+    console.log('File request to server: ' + filename);
     req
-        .pipe(zlib.createGunzip(), {end: false})
-        .pipe(fs.createWriteStream(filename))
-        .on('error', function(err, data) {
-            console.error("server error", err)
-        })
-        .on('finish', function() {
-            res.writeHead(201, {'Content-Type': 'text/plain'});
-            res.end('That\'s it\n');
-            console.log('File saved', filename);
+        .pipe(m)
+        .pipe(zlib.createGunzip())
+        .pipe(fs.createWriteStream(`${__dirname}/${uploadFolder}/${filename}`)) //todo: check if file with suhc name already exists and handle this situation 
+        // Q - how to handle errors here??? 
+        .on('finish', function () {
+            res.writeHead(201, { 'Content-Type': 'text/plain' });
+            console.log(`File saved: ${filename}`);
+            console.log(`Compressed file size: ${m.bytes}b`);
+            res.end();
         });
 });
 
-server.listen(3000, function() {
+server.listen(3000, function () {
     console.log('Listening');
 });
