@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const split2 = require('split2');
-const through2 = require('through2');
 
 const SERVER_PORT = 3000;
 const RESPONSE_OK = 200;
@@ -11,29 +10,26 @@ const parsedCSVPath = `${__dirname}/assets/sample.csv`;
 const parsedData = [];
 let keys = [];
 
+
 let lineCount = 0;
 //read and parse CSV  // how to make sure data are parsed when first GET request comes? promise? 
 fs.createReadStream(parsedCSVPath)
     .pipe(split2())
-    .pipe(through2.obj(function (chunk) {
-        console.log("chunk", chunk);
-        return chunk;
-    }));
-// .on('data', function (item) {
-//     if (lineCount == 0) {
-//         keys = item.split(DELIMITER);
-//     } else {
-//         let newDataItem = {};
-//         item.split(DELIMITER).forEach((value, index) => {
-//             newDataItem[keys[index]] = value;
-//         });
-//         parsedData.push(newDataItem);
-//     }
-//     lineCount++;
-// })
-// .on('end', () => {
-//     console.log("read end:\n", parsedData);
-// });
+    .on('data', function (item) {
+        if (lineCount == 0) {
+            keys = item.split(',');
+        } else {
+            let newDataItem = {};
+            item.split(DELIMITER).forEach((value, index) => {
+                newDataItem[keys[index]] = value;
+            });
+            parsedData.push(newDataItem);
+        }
+        lineCount++;
+    })
+    .on('end', () => {
+        console.log("read end:\n", parsedData);
+    });
 
 var server = http.createServer(function (req, res) {
     if (req.method === 'GET') {

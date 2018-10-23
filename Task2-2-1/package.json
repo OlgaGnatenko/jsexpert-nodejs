@@ -1,7 +1,6 @@
 {
   "name": "task2-2",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,5 +11,7 @@
   "dependencies": {
     "split2": "^3.0.0",
     "through2": "^2.0.3"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
