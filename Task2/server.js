@@ -2,7 +2,12 @@ const http = require('http');
 const fs = require('fs');
 const zlib = require('zlib');
 const meter = require('stream-meter');
+
 const m = meter();
+m.on("error", function (e) {
+    // log the error but don't kill the process
+    console.log(`Meter error: ${e.message}`)
+});
 
 const uploadFolder = 'received-files';
 

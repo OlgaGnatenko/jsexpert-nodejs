@@ -18,7 +18,7 @@ const options = {
 };
 
 fs.stat(readFileName, function (err, stat) {
-    console.log(`Initial file size: ${stat.size}`);
+    console.log(`Initial file size: ${stat.size}b`);
 });
 
 
