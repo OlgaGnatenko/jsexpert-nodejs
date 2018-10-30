@@ -7,11 +7,11 @@ const { delay } = require('../middlewares/delay');
 
 const { NOT_FOUND, GET_SUCCESS } = require('../src/constants');
 
-/* DELAY */
-router.use(delay);
-
 // start measuring time
 router.use(startTimeTracking);
+
+/* DELAY */
+router.use(delay);
 
 /* GET lists */
 router.get('/', function (req, res, next) {
