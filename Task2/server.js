@@ -3,7 +3,7 @@ const fs = require('fs');
 const zlib = require('zlib');
 const meter = require('stream-meter');
 
-const m = meter();
+// const m = meter();
 m.on("error", function (e) {
     // log the error but don't kill the process
     console.log(`Meter error: ${e.message}`)
@@ -12,6 +12,7 @@ m.on("error", function (e) {
 const uploadFolder = 'received-files';
 
 var server = http.createServer(function (req, res) {
+    let m = meter();
     const filename = req.headers.filename;
     console.log('File request to server: ' + filename);
     req
