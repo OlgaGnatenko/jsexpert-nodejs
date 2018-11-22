@@ -1,5 +1,5 @@
 (() => {
-    const apiUrl = '/api/posts';
+    const apiUrl = '/posts';
 
     const feed = document.getElementById('feed');
     const createPost = document.getElementById('createPost');

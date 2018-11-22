@@ -8,11 +8,11 @@ const connectionOptions = {
 
 mongoose.connect(dbURI, connectionOptions);
 
-mongoose.connection.on('connected', function() {
+mongoose.connection.on('connected', function () {
     console.log('Mongo!', dbURI);
 });
 
-mongoose.connection.on('error', function(err) {
+mongoose.connection.on('error', function (err) {
     console.log('ERROR connecting!', err);
 });
 

@@ -1,35 +1,44 @@
 const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
+    id: mongoose.Schema.Types.ObjectId,
     text: {
         type: String,
         required: [true, "Text is required"]
     },
-    photo: Buffer,
+    picture: String,
+    publicationDate: Date,
     author: {
-        username: String,
-        password: String,
-        firstName: String,
-        lastName: String,
-        email: {
-            type: String,
-            match: /\S+@\S+\.\S+/
-        },
-        avatarUrl: String
+        id: Number,
+        name: String,
+        avatar: String
     }
 });
 
-postSchema.pre('save', function(next) {
-    this._id = mongoose.mongo.ObjectId();
-    this.user = {
-        username: 'admin',
-        password: '111',
-        firstName: 'Admin',
+postSchema.pre('save', function (next) {
+    this.id = mongoose.mongo.ObjectId();
+    this.author = {
+        id: 1,
+        name: 'Mr Admin',
         lastName: 'LastAdmin',
-        email: 'admin@admin.com'
+        avatar: '/assets/img/avatar-mdo.png'
     };
+    this.publicationDate = new Date();
     next();
+});
+
+postSchema.post('save', (err, doc, next) => {
+    if (err.name !== 'MongoError' || err.code != 11000) {
+        return next(err);
+    }
+    // handle validation errors here 
+    // const path = 'duplicate key';
+    // const validationError = new mongoose.Error.ValidationError();
+    // validationError.errors[path] = validationError.errors[path] || {};
+    // validationError.errors[path].message = `${path} is expected to be unique`;
+    // validationError.errors[path].reason = err.message;
+    // validationError.errors[path].name = err.name;
+    next(validationError);
 });
 
 module.exports = mongoose.model('Post', postSchema);
