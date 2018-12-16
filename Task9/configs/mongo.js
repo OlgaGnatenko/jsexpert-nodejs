@@ -1,20 +1,20 @@
 const mongoose = require('mongoose');
 
-const dbURI = 'mongodb://admin:admin123@ds019468.mlab.com:19468/jsexpert-node-db';
+const dbURI = 'mongodb://dbuser:dbuser1234@ds019468.mlab.com:19468/jsexpert-node-db';
 
-const connectionOptions = {
-    useNewUrlParcer: true
-};
+var dbOptions = {
+    user: 'dbuser',
+    pass: 'dbuser1234',
+    useNewUrlParser: true
+}
 
-mongoose.connect(dbURI, connectionOptions);
-
-mongoose.connection.on('connected', function () {
-    console.log('Mongo!', dbURI);
+mongoose.connect(dbURI, dbOptions);
+mongoose.connection.on('connected', function() {
+    console.log('Mongoose connected to: ' + dbURI)
 });
 
-mongoose.connection.on('error', function (err) {
-    console.log('ERROR connecting!', err);
+mongoose.connection.on('error', function() {
+    console.log('Mongoose connection error: ' + dbURI)
 });
 
-module.exports = mongoose;
-
+module.exports = mongoose; 
