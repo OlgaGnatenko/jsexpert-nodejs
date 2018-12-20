@@ -10,7 +10,10 @@ const postSchema = mongoose.Schema({
     },
     publicationDate: Date,
     lastUpdateDate: Date, 
-    text: String,
+    text: {
+        type: String,
+        required: [true, 'Post text cannot be empty']
+    },
     picture: String
 });
 
@@ -25,5 +28,10 @@ postSchema.pre('save', function(next) {
     };
     next();
 });
+
+postSchema.pre('findOneAndUpdate', function(next) {
+    this._update.lastUpdateDate = new Date();
+    next();    
+})
 
 module.exports = mongoose.model('Post', postSchema);

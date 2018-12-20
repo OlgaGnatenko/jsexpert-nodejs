@@ -25,19 +25,11 @@
     let actualPosts = [];
 
     let currentUser = null;
-
+    user();
     init();
 
     function init() {
         // todo: change to async/await 
-        fetch(userUrl)
-            .then(response => response.json())
-            .then(response => {
-                user = response;
-                console.log('current user', user);
-            })
-            .catch(e => console.log(e));
-
         fetch(postsUrl)
             .then(response => response.json())
             .then(response => {
@@ -49,6 +41,14 @@
             .catch(e => console.log(e));
     }
 
+    function user() {
+        fetch(userUrl)
+        .then(response => response.json())
+        .then(response => {
+            currentUser = response;
+        })
+        .catch(e => console.log(e));
+    }
 
     function renderPosts(posts) {
         feed.innerText = '';
@@ -72,7 +72,7 @@
                 <a href="#postModalComment" class="boa" data-toggle="modal" for="comment" data-id="${post._id}">
                     <button class="cg nz ok" data-id="${post._id}" for="comment" title="Оставить комментарий">Оставить комментарий</button>
                 </a>
-                <button type="button" class="close" aria-hidden="true" title="Удалить"><span class="h bbg"></span></button>
+                <button type="button" class="close" aria-hidden="true" title="Удалить" name="delete-post" data-id="${post._id}"><span class="h bbg"></span></button>
                 <hr>
                 <ul class="bow afa commentBlock" id="comment-${post._id}">
                 </ul>
@@ -130,6 +130,7 @@
         feed.addEventListener('click', publishCommentListener);
         feed.addEventListener('click', editCommentListener);
         feed.addEventListener('click', deleteCommentListener);
+        feed.addEventListener('click', deletePostListener);
     }
 
 
@@ -165,6 +166,7 @@
                     } else {
                         formData.append('picture', postImageEdit.getAttribute('src'));
                     }
+                    formData.append('id', id)
 
                     fetch(postsUrl, {
                         method: 'PATCH',
@@ -220,6 +222,17 @@
             .then(() => init())
     }
 
+    function deletePostListener(event) {
+        if (!event.target.getAttribute("data-id") || event.target.getAttribute('name') !== 'delete-post') {
+            return;
+        }
+
+        const id = event.target.getAttribute("data-id");
+
+        fetch(`${postsUrl}/${id}`, {method: 'DELETE'})
+            .then(() => init())
+    }
+
     function createPostListener() {
         postImageCreate.setAttribute('src', 'https://via.placeholder.com/346x335.png');
 
@@ -241,6 +254,7 @@
                 postPublishCreate.removeEventListener('click', createHandler);
                 postTextCreate.value = '';
                 postAttachCreate.value = '';
+                init();
             });
         };
         postPublishCreate.addEventListener('click', createHandler);

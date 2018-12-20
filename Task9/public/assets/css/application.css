@@ -21,7 +21,9 @@
 strong {
   font-weight: bold;
 }
-
+button > * {
+  pointer-events: none;
+}
 
 /* navbar */
 .app-navbar {
