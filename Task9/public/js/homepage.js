@@ -242,7 +242,7 @@
 
 
             if (postAttachCreate.files[0]) {
-                formData.append('picture', postAttachCreate.files[0], 'postPicture');
+                formData.append('picture', postAttachCreate.files[0]);
             } else {
                 formData.append('picture', postImageCreate.getAttribute('src'));
             }

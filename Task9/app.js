@@ -16,7 +16,7 @@ const app = express();
 
 app.set(path.join(__dirname, 'views'));
 app.set("view engine", "hbs");
-app.use(fileUpload());
+app.use(fileUpload({safeFileNames: true, preserveExtension: 10}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
